@@ -1,14 +1,25 @@
 package com.raghavEcomm.model;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,21 +39,29 @@ public class Order {
 
 	private String orderStatus;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "orders")
 	@JsonIgnore
 	private Customer customer;
 
+	@Min(value = 99, message = "Minimum Order amount is 99")
+	@Max(value = 99999, message = "Maximun Order amount is 99999")
+	private Integer orderAmount;
+
 	private LocalDate orderDate;
 
-	@OneToMany
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "order_product", joinColumns = @JoinColumn(name = "order_id"))
+	@Column(name = "quantity")
+	@MapKeyJoinColumn(name = "product_id", referencedColumnName = "productId")
 	@JsonIgnore
 	private Map<Product, Integer> products;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Address shippingAddress;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Payment payment;
+
 }

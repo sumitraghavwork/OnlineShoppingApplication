@@ -31,6 +31,10 @@ public class ProductController {
 	@Autowired
 	private ProductService pservice;
 
+	/**********************************
+	 * POST MAPPINGS START
+	 ************************************/
+
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProducthandler(@RequestBody Product product, @RequestParam String key,
 			@RequestParam Integer categoryId)
@@ -41,7 +45,14 @@ public class ProductController {
 		return new ResponseEntity<Product>(savedproduct, HttpStatus.OK);
 	}
 
+	/**********************************
+	 * POST MAPPINGS END
+	 ************************************/
 	// ***************************************************************************************************************
+
+	/**********************************
+	 * PUT MAPPINGS START
+	 ************************************/
 	@PutMapping("/products")
 	public ResponseEntity<Product> updateProductHandler(@Valid @RequestBody Product product,
 			@RequestParam Integer productId, @RequestParam String key)
@@ -51,8 +62,14 @@ public class ProductController {
 
 		return new ResponseEntity<Product>(savedproduct, HttpStatus.FOUND);
 	}
+	/**********************************
+	 * PUT MAPPINGS END
+	 ************************************/
 
 	// ***************************************************************************************************************
+	/**********************************
+	 * DELETE MAPPINGS START
+	 ************************************/
 	@DeleteMapping("/products/{productId}")
 	public ResponseEntity<Product> deleteProductHandler(@PathVariable("productId") Integer productId,
 			@RequestParam String key) throws ProductException, AdminException, LoginException {
@@ -61,8 +78,15 @@ public class ProductController {
 
 		return new ResponseEntity<Product>(savedproduct, HttpStatus.OK);
 	}
+	/**********************************
+	 * DELETE MAPPINGS END
+	 ************************************/
 
 	// ***************************************************************************************************************
+
+	/**********************************
+	 * GET MAPPINGS START
+	 ************************************/
 	@GetMapping("/products/{productId}")
 	public ResponseEntity<Product> getProductByIdHandler(@PathVariable("productId") Integer productId)
 			throws ProductException {
@@ -80,8 +104,9 @@ public class ProductController {
 
 		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
 	}
+	// ***************************************************************************************************************
 
-	@GetMapping("/products")
+	@GetMapping("/productsUnderPrice")
 	public ResponseEntity<List<Product>> getProductsUnderPriceHandler(@RequestParam Integer price)
 			throws ProductException {
 
@@ -89,8 +114,9 @@ public class ProductController {
 
 		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
 	}
+	// ***************************************************************************************************************
 
-	@GetMapping("/products")
+	@GetMapping("/productsFromPriceToPrice")
 	public ResponseEntity<List<Product>> getProductsFromPriceToPriceHandler(@RequestParam Integer fromPrice,
 			@RequestParam Integer toPrice) throws ProductException {
 
@@ -98,4 +124,9 @@ public class ProductController {
 
 		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
 	}
+	// ***************************************************************************************************************F
+
+	/**********************************
+	 * GET MAPPINGS END
+	 ************************************/
 }

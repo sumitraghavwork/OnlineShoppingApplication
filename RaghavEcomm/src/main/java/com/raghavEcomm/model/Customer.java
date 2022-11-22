@@ -1,7 +1,8 @@
 package com.raghavEcomm.model;
 
-import java.util.Set;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -49,16 +50,20 @@ public class Customer {
 	@Column(unique = true)
 	private String email;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Cart cart;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Set<Address> addresses;
+	private List<Address> addresses;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Set<Card> userCards;
+	private List<Card> userCards;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Order> orders;
 
 }

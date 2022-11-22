@@ -16,6 +16,7 @@ import com.raghavEcomm.model.Feedback;
 import com.raghavEcomm.model.Order;
 import com.raghavEcomm.repository.CurrentUserSessionRepo;
 import com.raghavEcomm.repository.FeedbackRepo;
+import com.raghavEcomm.repository.OrderRepo;
 
 @Service
 public class FeedbackServiceImplementation implements FeedbackService {
@@ -25,6 +26,9 @@ public class FeedbackServiceImplementation implements FeedbackService {
 
 	@Autowired
 	private CustomerService userService;
+
+	@Autowired
+	private OrderRepo orderRepo;
 
 	@Autowired
 	private OrderService orderService;
@@ -116,7 +120,7 @@ public class FeedbackServiceImplementation implements FeedbackService {
 			throw new UserException("user not logged in");
 		}
 
-		Optional<Order> existingOrder = orderService.findById(orderId);
+		Optional<Order> existingOrder = orderRepo.findById(orderId);
 
 		if (existingOrder.isPresent() == false)
 			throw new OrderException("No reservations found!");

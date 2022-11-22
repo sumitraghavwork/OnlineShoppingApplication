@@ -1,8 +1,246 @@
 package com.raghavEcomm.service;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.raghavEcomm.exceptions.CardException;
+import com.raghavEcomm.exceptions.LoginException;
+import com.raghavEcomm.exceptions.OrderException;
+import com.raghavEcomm.exceptions.PaymentException;
+import com.raghavEcomm.exceptions.UserException;
+import com.raghavEcomm.model.Card;
+import com.raghavEcomm.model.CurrentUserSession;
+import com.raghavEcomm.model.Customer;
+import com.raghavEcomm.model.Order;
+import com.raghavEcomm.model.Payment;
+import com.raghavEcomm.repository.CurrentUserSessionRepo;
+import com.raghavEcomm.repository.CustomerRepo;
+import com.raghavEcomm.repository.OrderRepo;
+import com.raghavEcomm.repository.PaymentRepo;
+
 @Service
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentServiceImpl implements PaymentService {
+
+	@Autowired
+	private PaymentRepo payRepo;
+
+	@Autowired
+	private OrderRepo orderRepo;
+
+	@Autowired
+	private CustomerRepo uRepo;
+
+	@Autowired
+	private CardService cardservice;
+
+	@Autowired
+	private CurrentUserSessionRepo csdao;
+
+	@Override
+	public Payment makePayment(Integer orderId, Integer cardId, String customerKey)
+			throws LoginException, UserException, OrderException, CardException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Customer customer = existingUser.get();
+
+			Optional<Order> existingOrder = orderRepo.findById(orderId);
+
+			if (existingOrder.isPresent()) {
+
+				Order savedOrder = existingOrder.get();
+
+				if (savedOrder.getCustomer().getUserLoginId() == customer.getUserLoginId()) {
+
+					Card userCard = cardservice.getCardById(cardId, customerKey);
+
+					Payment payment = new Payment();
+					payment.setAmount(savedOrder.getOrderAmount());
+					payment.setCard(userCard);
+					payment.setOrder(savedOrder);
+					payment.setPaid(true);
+					payment.setPaymentDate(LocalDate.now());
+
+					Payment savedPayment = payRepo.save(payment);
+
+					savedOrder.setPayment(savedPayment);
+					orderRepo.save(savedOrder);
+
+					return savedPayment;
+
+				} else {
+					throw new UserException("Invalid User Details for Order Id: " + orderId);
+				}
+
+			} else {
+				throw new OrderException("No order found with this orderId: " + orderId);
+			}
+
+		} else {
+			throw new UserException("User Not Found");
+		}
+	}
+
+	@Override
+	public String cancelPayment(Integer orderId, String customerKey)
+			throws UserException, LoginException, OrderException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Customer customer = existingUser.get();
+
+			Optional<Order> existingOrder = orderRepo.findById(orderId);
+
+			if (existingOrder.isPresent()) {
+
+				Order savedOrder = existingOrder.get();
+
+				if (savedOrder.getCustomer().getUserLoginId() == customer.getUserLoginId()) {
+
+					savedOrder.setOrderStatus("Cancelled");
+					orderRepo.save(savedOrder);
+
+					return "Order cancelled";
+
+				} else {
+					throw new UserException("Invalid User Details for Order Id: " + orderId);
+				}
+
+			} else {
+				throw new OrderException("No order found with this orderId: " + orderId);
+			}
+
+		} else {
+			throw new UserException("User Not Found");
+		}
+	}
+
+	@Override
+	public Payment getPaymentDetailsByPaymentId(Integer paymentId, String customerKey)
+			throws OrderException, LoginException, UserException, PaymentException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Customer customer = existingUser.get();
+
+			Optional<Payment> existingPayment = payRepo.findById(paymentId);
+
+			if (existingPayment.isPresent()) {
+
+				Payment savedPayment = existingPayment.get();
+
+				Order savedOrder = savedPayment.getOrder();
+
+				boolean flag = customer.getOrders().contains(savedOrder);
+
+				if (flag) {
+
+					return savedPayment;
+
+				} else {
+					throw new OrderException("for current User No order found with this paymentId: " + paymentId);
+				}
+
+			} else {
+				throw new PaymentException("No payment found with this paymentId: " + paymentId);
+			}
+
+		} else {
+			throw new UserException("User Not Found");
+		}
+	}
+
+	@Override
+	public Payment getPaymentDetailsByOrderId(Integer orderId, String customerKey)
+			throws OrderException, LoginException, UserException, PaymentException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Customer customer = existingUser.get();
+
+			Optional<Order> existingOrder = orderRepo.findById(orderId);
+
+			if (existingOrder.isPresent()) {
+
+				Order savedOrder = existingOrder.get();
+
+				if (savedOrder.getCustomer().getUserLoginId() == customer.getUserLoginId()) {
+
+					Payment savedPayment = savedOrder.getPayment();
+
+					return savedPayment;
+
+				} else {
+					throw new UserException("Invalid User Details for Order Id: " + orderId);
+				}
+
+			} else {
+				throw new OrderException("No order found with this orderId: " + orderId);
+			}
+
+		} else {
+			throw new UserException("User Not Found");
+		}
+	}
+
+	@Override
+	public Payment getAllPaymentOfCustomerByCustomerId(String customerKey) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

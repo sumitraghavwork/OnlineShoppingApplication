@@ -1,0 +1,84 @@
+package com.raghavEcomm.controllers;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.raghavEcomm.exceptions.CardException;
+import com.raghavEcomm.exceptions.LoginException;
+import com.raghavEcomm.exceptions.UserException;
+import com.raghavEcomm.model.Card;
+import com.raghavEcomm.service.CardService;
+
+@RestController
+@RequestMapping("addressController")
+public class CardController {
+
+	@Autowired
+	private CardService cservice;
+
+	@PostMapping("/cards")
+	public ResponseEntity<Card> addAddressHandler(@Valid @RequestBody Card card, @RequestParam String customerKey)
+			throws LoginException, UserException, CardException {
+
+		Card savedcard = cservice.addCard(card, customerKey);
+
+		return new ResponseEntity<Card>(savedcard, HttpStatus.OK);
+
+	}
+
+	@PutMapping("/cards/{cardId}")
+	public ResponseEntity<Card> updateAddressHandler(@PathVariable("cardId") Integer cardId,
+			@Valid @RequestBody Card card, @RequestParam String customerKey)
+			throws LoginException, UserException, CardException {
+
+		Card savedcard = cservice.updateCard(cardId, card, customerKey);
+
+		return new ResponseEntity<Card>(savedcard, HttpStatus.OK);
+
+	}
+
+	@DeleteMapping("/cards/{cardId}")
+	public ResponseEntity<String> deleteAddressHandler(@PathVariable("cardId") Integer cardId,
+			@RequestParam String customerKey) throws LoginException, UserException, CardException {
+
+		String res = cservice.deleteCard(cardId, customerKey);
+
+		return new ResponseEntity<String>(res, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/cards/{cardId}")
+	public ResponseEntity<Card> getAddressByIdHandler(@PathVariable("cardId") Integer cardId,
+			@RequestParam String customerKey) throws LoginException, UserException, CardException {
+
+		Card savedcard = cservice.getCardById(cardId, customerKey);
+
+		return new ResponseEntity<Card>(savedcard, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/cards")
+	public ResponseEntity<List<Card>> getAllAddressOfCustomerHandler(@RequestParam String customerKey)
+			throws LoginException, UserException, CardException {
+
+		List<Card> savedcard = cservice.getAllCardOfCustomer(customerKey);
+
+		return new ResponseEntity<List<Card>>(savedcard, HttpStatus.OK);
+
+	}
+
+}

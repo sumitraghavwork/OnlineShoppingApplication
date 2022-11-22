@@ -2,6 +2,7 @@ package com.raghavEcomm.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,19 +24,19 @@ public class Payment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer paymentId;
-	
+
 	private Boolean paid;
-	
+
 	private Integer amount;
-	
+
 	private LocalDate paymentDate;
-	
-	@OneToOne
+
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Card card;
-	
-	@OneToOne
+
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Order order;
-	
+
 }

@@ -12,6 +12,30 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+	
+	@ExceptionHandler(PaymentException.class)
+	public ResponseEntity<MyErrorDetails> myPaymentExceptionExceptionHandler(PaymentException e, WebRequest web) {
+
+		MyErrorDetails err = new MyErrorDetails(LocalDateTime.now(), e.getMessage(), web.getDescription(false));
+
+		return new ResponseEntity<MyErrorDetails>(err, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AddressException.class)
+	public ResponseEntity<MyErrorDetails> myAddressExceptionExceptionHandler(AddressException e, WebRequest web) {
+
+		MyErrorDetails err = new MyErrorDetails(LocalDateTime.now(), e.getMessage(), web.getDescription(false));
+
+		return new ResponseEntity<MyErrorDetails>(err, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(CardException.class)
+	public ResponseEntity<MyErrorDetails> myCardExceptionExceptionHandler(CardException e, WebRequest web) {
+
+		MyErrorDetails err = new MyErrorDetails(LocalDateTime.now(), e.getMessage(), web.getDescription(false));
+
+		return new ResponseEntity<MyErrorDetails>(err, HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(ProductCategoryException.class)
 	public ResponseEntity<MyErrorDetails> myProductCategoryExceptionHandler(ProductCategoryException e,

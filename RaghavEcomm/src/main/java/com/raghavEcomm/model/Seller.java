@@ -50,7 +50,7 @@ public class Seller {
 	@Column(unique = true)
 	private String email;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Map<Product, Integer> products;
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JsonIgnore
+//	private Map<Product, Integer> products;
 }

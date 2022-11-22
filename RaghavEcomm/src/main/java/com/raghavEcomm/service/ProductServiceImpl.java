@@ -47,6 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
 		if (existedCategory.isPresent()) {
 			ProductCategory presentCategory = existedCategory.get();
+			product.setProductCategory(presentCategory);
 
 			return productRepo.save(product);
 
