@@ -33,35 +33,55 @@
 
 <h1 align="left">Screenshots</h1>
 
-<p align="center"> <img src="./webContent/ER_diagram.png" alt="Class Diagram" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/db_diagram.png" alt="Class Diagram" style="border-radius:20px"/> </p>
 
 ### Admin Controller
 
-<p align="center"> <img src="./webContent/Admin.png" alt="Admin Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/admin_controller.png" alt="Admin Controller" style="border-radius:20px"/> </p>
 
 ### User Controller
 
-<p align="center"> <img src="./webContent/user.png" alt="User Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/customer_controller.png" alt="User Controller" style="border-radius:20px"/> </p>
 
 ### Login Controller
 
-<p align="center"> <img src="./webContent/login.png" alt="Login Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/login_controller.png" alt="Login Controller" style="border-radius:20px"/> </p>
 
-### Bus Controller
+### Product Controller
 
-<p align="center"> <img src="./webContent/bus.png" alt="Bus Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/product_controller.png" alt="Bus Controller" style="border-radius:20px"/> </p>
 
-### Route Controller
+### Product Category Controller
 
-<p align="center"> <img src="./webContent/route.png" alt="Route Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/category_controller.png" alt="Route Controller" style="border-radius:20px"/> </p>
 
-### Reservation Controller
+### Cart Controller
 
-<p align="center"> <img src="./webContent/reservation.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/cart_controller.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
+
+### Order Controller
+
+<p align="center"> <img src="./web_content/controllers/order_controller.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
+
+### Payment Controller
+
+<p align="center"> <img src="./web_content/controllers/payment_controller.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
+
+### Sales Controller
+
+<p align="center"> <img src="./web_content/controllers/sales_controller.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
 
 ### Feedback Controller
 
-<p align="center"> <img src="./webContent/feedback.png" alt="Feedback Controller" style="border-radius:20px"/> </p>
+<p align="center"> <img src="./web_content/controllers/feedback_controller.png" alt="Feedback Controller" style="border-radius:20px"/> </p>
+
+### Card Controller
+
+<p align="center"> <img src="./web_content/controllers/card_controller.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
+
+### Address Controller
+
+<p align="center"> <img src="./web_content/controllers/address_controller.png" alt="Reservation Controller" style="border-radius:20px"/> </p>
 
 
 ## Authors
