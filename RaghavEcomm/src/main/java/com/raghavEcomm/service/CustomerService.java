@@ -12,7 +12,7 @@ public interface CustomerService {
 
 	public Customer updateUser(Customer user, String key) throws UserException, LoginException;
 
-	public Customer deleteUser(String username) throws UserException;
+	public Customer deleteUser(String username, String customerKey) throws UserException, LoginException;
 
 	public Customer findByUserLoginId(Integer userLoginId) throws UserException;
 

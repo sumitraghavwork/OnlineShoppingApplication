@@ -18,6 +18,7 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -31,6 +32,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "Order_Table")
 public class Order {
 
 	@Id
@@ -39,7 +41,7 @@ public class Order {
 
 	private String orderStatus;
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "orders")
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Customer customer;
 
@@ -50,7 +52,7 @@ public class Order {
 	private LocalDate orderDate;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "order_product", joinColumns = @JoinColumn(name = "order_id"))
+	@CollectionTable(name = "order_product")
 	@Column(name = "quantity")
 	@MapKeyJoinColumn(name = "product_id", referencedColumnName = "productId")
 	@JsonIgnore

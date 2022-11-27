@@ -71,6 +71,9 @@ public class PaymentServiceImpl implements PaymentService {
 				if (savedOrder.getCustomer().getUserLoginId() == customer.getUserLoginId()) {
 
 					Card userCard = cardservice.getCardById(cardId, customerKey);
+					
+					if(userCard==null)
+						throw new CardException("No card found with the card id: " + cardId);
 
 					Payment payment = new Payment();
 					payment.setAmount(savedOrder.getOrderAmount());

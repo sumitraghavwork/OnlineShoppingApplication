@@ -11,7 +11,7 @@ import com.raghavEcomm.model.Feedback;
 public interface FeedbackService {
 
 	public Feedback addFeedBack(Feedback feedback, String key, Integer orderId)
-			throws FeedbackException, UserException, OrderException;
+			throws FeedbackException, UserException, OrderException, LoginException;
 
 	public Feedback updateFeedBack(Feedback feedback, String key, Integer feedbackId)
 			throws FeedbackException, LoginException, UserException;

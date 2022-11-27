@@ -67,10 +67,10 @@ public class CustomerController {
 	}
 
 	@DeleteMapping("/customers/{username}")
-	public ResponseEntity<Customer> deleteCustomerHandler(@PathVariable("username") String username)
-			throws UserException, LoginException {
+	public ResponseEntity<Customer> deleteCustomerHandler(@PathVariable("username") String username,
+			@RequestParam String customerKey) throws UserException, LoginException {
 
-		Customer updatedUser = userService.deleteUser(username);
+		Customer updatedUser = userService.deleteUser(username, customerKey);
 
 		return new ResponseEntity<Customer>(updatedUser, HttpStatus.OK);
 

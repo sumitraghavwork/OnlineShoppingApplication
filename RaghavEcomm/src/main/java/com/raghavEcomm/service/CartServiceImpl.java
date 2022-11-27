@@ -68,7 +68,9 @@ public class CartServiceImpl implements CartService {
 			}
 			cart.setCartValue(cart.getCartValue() + product.getProductPrice());
 
-			return cart;
+			Cart savedCart = cartRepo.save(cart);
+
+			return savedCart;
 
 		} else {
 			throw new UserException("User Not Found");
@@ -106,7 +108,9 @@ public class CartServiceImpl implements CartService {
 			}
 			cart.setCartValue(cart.getCartValue() + product.getProductPrice());
 
-			return cart;
+			Cart savedCart = cartRepo.save(cart);
+
+			return savedCart;
 
 		} else {
 			throw new UserException("User Not Found");
@@ -151,7 +155,9 @@ public class CartServiceImpl implements CartService {
 
 			cart.setCartValue(cart.getCartValue() - product.getProductPrice());
 
-			return cart;
+			Cart savedCart = cartRepo.save(cart);
+
+			return savedCart;
 
 		} else {
 			throw new UserException("User Not Found");
@@ -192,8 +198,9 @@ public class CartServiceImpl implements CartService {
 
 			cart.setCartValue(cart.getCartValue() - product.getProductPrice());
 
-			return cart;
+			Cart savedCart = cartRepo.save(cart);
 
+			return savedCart;
 		} else {
 			throw new UserException("User Not Found");
 		}
@@ -285,7 +292,9 @@ public class CartServiceImpl implements CartService {
 
 			cart.setProducts(new HashMap<>());
 
-			return cart;
+			Cart savedCart = cartRepo.save(cart);
+
+			return savedCart;
 
 		} else {
 			throw new UserException("User Not Found");

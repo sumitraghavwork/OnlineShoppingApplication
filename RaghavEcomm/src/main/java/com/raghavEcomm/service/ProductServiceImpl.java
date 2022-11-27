@@ -46,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
 		Optional<ProductCategory> existedCategory = pcRepo.findById(categoryId);
 
 		if (existedCategory.isPresent()) {
+
 			ProductCategory presentCategory = existedCategory.get();
 			product.setProductCategory(presentCategory);
 
@@ -105,6 +106,8 @@ public class ProductServiceImpl implements ProductService {
 		if (existingProduct.isPresent()) {
 
 			Product present = existingProduct.get();
+
+			present.setProductCategory(null);
 
 			productRepo.delete(present);
 

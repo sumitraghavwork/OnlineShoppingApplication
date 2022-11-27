@@ -54,15 +54,15 @@ public class Customer {
 	@JsonIgnore
 	private Cart cart;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<Address> addresses;
+	private Address addresses;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Card> userCards;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "customer")
 	@JsonIgnore
 	private List<Order> orders;
 

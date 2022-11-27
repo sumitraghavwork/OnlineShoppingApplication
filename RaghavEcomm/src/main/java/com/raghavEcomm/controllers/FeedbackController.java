@@ -31,7 +31,7 @@ public class FeedbackController {
 
 	@PostMapping("/feedbacks")
 	public ResponseEntity<Feedback> addFeedbackHandler(@RequestParam String key, @RequestParam Integer orderId,
-			@RequestBody Feedback feedback) throws FeedbackException, UserException, OrderException {
+			@RequestBody Feedback feedback) throws FeedbackException, UserException, OrderException, LoginException {
 
 		Feedback addFeedback = feedbackService.addFeedBack(feedback, key, orderId);
 

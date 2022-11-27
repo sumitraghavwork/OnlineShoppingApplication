@@ -31,7 +31,7 @@ public class CardController {
 	private CardService cservice;
 
 	@PostMapping("/cards")
-	public ResponseEntity<Card> addAddressHandler(@Valid @RequestBody Card card, @RequestParam String customerKey)
+	public ResponseEntity<Card> addCardHandler(@Valid @RequestBody Card card, @RequestParam String customerKey)
 			throws LoginException, UserException, CardException {
 
 		Card savedcard = cservice.addCard(card, customerKey);
@@ -41,7 +41,7 @@ public class CardController {
 	}
 
 	@PutMapping("/cards/{cardId}")
-	public ResponseEntity<Card> updateAddressHandler(@PathVariable("cardId") Integer cardId,
+	public ResponseEntity<Card> updateCardHandler(@PathVariable("cardId") Integer cardId,
 			@Valid @RequestBody Card card, @RequestParam String customerKey)
 			throws LoginException, UserException, CardException {
 
@@ -52,7 +52,7 @@ public class CardController {
 	}
 
 	@DeleteMapping("/cards/{cardId}")
-	public ResponseEntity<String> deleteAddressHandler(@PathVariable("cardId") Integer cardId,
+	public ResponseEntity<String> deleteCardHandler(@PathVariable("cardId") Integer cardId,
 			@RequestParam String customerKey) throws LoginException, UserException, CardException {
 
 		String res = cservice.deleteCard(cardId, customerKey);
@@ -62,7 +62,7 @@ public class CardController {
 	}
 
 	@GetMapping("/cards/{cardId}")
-	public ResponseEntity<Card> getAddressByIdHandler(@PathVariable("cardId") Integer cardId,
+	public ResponseEntity<Card> getCardByIdHandler(@PathVariable("cardId") Integer cardId,
 			@RequestParam String customerKey) throws LoginException, UserException, CardException {
 
 		Card savedcard = cservice.getCardById(cardId, customerKey);
@@ -72,7 +72,7 @@ public class CardController {
 	}
 
 	@GetMapping("/cards")
-	public ResponseEntity<List<Card>> getAllAddressOfCustomerHandler(@RequestParam String customerKey)
+	public ResponseEntity<List<Card>> getAllCardsOfCustomerHandler(@RequestParam String customerKey)
 			throws LoginException, UserException, CardException {
 
 		List<Card> savedcard = cservice.getAllCardOfCustomer(customerKey);

@@ -127,7 +127,18 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
 		if (existedCategory.isPresent()) {
 			ProductCategory presentCategory = existedCategory.get();
+
+			List<Product> productList = presentCategory.getProducts();
+
+			for (int i = 0; i < productList.size(); i++) {
+				Product p = productList.get(i);
+				p.setProductCategory(null);
+			}
+
+			presentCategory.setProducts(null);
+
 			pcRepo.delete(presentCategory);
+
 			return presentCategory;
 
 		} else {

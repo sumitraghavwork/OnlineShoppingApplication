@@ -47,9 +47,9 @@ public class AddressServiceImpl implements AddressService {
 		if (existingUser.isPresent()) {
 			Customer customer = existingUser.get();
 
-			Address savedAdress = addressRepo.save(address);
+			customer.setAddresses(address);
 
-			customer.getAddresses().add(savedAdress);
+			Address savedAdress = addressRepo.save(address);
 
 			return savedAdress;
 
@@ -59,8 +59,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public String deleteAddress(Integer addressId, String customerKey)
-			throws LoginException, UserException, AddressException {
+	public String deleteAddress(String customerKey) throws LoginException, UserException, AddressException {
 
 		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
 
@@ -77,136 +76,120 @@ public class AddressServiceImpl implements AddressService {
 		if (existingUser.isPresent()) {
 			Customer customer = existingUser.get();
 
-			List<Address> list = customer.getAddresses();
+			Address address = customer.getAddresses();
 
-			boolean flag = list.removeIf((c) -> c.getAddressId() == addressId);
+			if (address != null) {
 
-			if (flag) {
-
-				customer.setAddresses(list);
-
-				uRepo.save(customer);
-
-				addressRepo.deleteById(addressId);
+				addressRepo.delete(address);
 
 				return "Card Deleted Succesfully!";
 			} else {
-				throw new AddressException("No Address found for this user with addressid: " + addressId);
-			}
-		} else {
-			throw new UserException("User Not Found");
-		}
-	}
-
-	@Override
-	public Address updateAddress(Integer addressId, Address address, String customerKey)
-			throws LoginException, UserException, AddressException {
-
-		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
-
-		if (loggedInUser == null) {
-			throw new LoginException("Invalid Key Entered");
-		}
-
-		if (loggedInUser.getCustomer() == false) {
-			throw new UserException("Unauthorized Access! Only Customer can make changes");
-		}
-
-		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
-
-		if (existingUser.isPresent()) {
-
-			Customer customer = existingUser.get();
-
-			List<Address> list = customer.getAddresses();
-
-			boolean flag = list.removeIf((c) -> c.getAddressId() == addressId);
-
-			if (flag) {
-
-				Address savedAdress = addressRepo.save(address);
-
-				customer.getAddresses().add(savedAdress);
-
-				uRepo.save(customer);
-
-				return savedAdress;
-			} else {
-				throw new AddressException("No Address found for this user with addressid: " + addressId);
-			}
-
-		} else {
-			throw new UserException("User Not Found");
-		}
-	}
-
-	@Override
-	public Address getAddressById(Integer addressid, String customerKey)
-			throws LoginException, UserException, AddressException {
-
-		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
-
-		if (loggedInUser == null) {
-			throw new LoginException("Invalid Key Entered");
-		}
-
-		if (loggedInUser.getCustomer() == false) {
-			throw new UserException("Unauthorized Access! Only Customer can make changes");
-		}
-
-		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
-
-		if (existingUser.isPresent()) {
-			Customer customer = existingUser.get();
-
-			List<Address> list = customer.getAddresses();
-
-			Address address = null;
-			for (Address ad : list) {
-				if (ad.getAddressId() == addressid) {
-					address = ad;
-					break;
-				}
-			}
-			if (address != null)
-				return address;
-			else
-				throw new AddressException("No Address found for this user with addressid: " + addressid);
-
-		} else {
-			throw new UserException("User Not Found");
-		}
-	}
-
-	@Override
-	public List<Address> getAllAddressOfCustomer(String customerKey)
-			throws LoginException, UserException, AddressException {
-
-		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
-
-		if (loggedInUser == null) {
-			throw new LoginException("Invalid Key Entered");
-		}
-
-		if (loggedInUser.getCustomer() == false) {
-			throw new UserException("Unauthorized Access! Only Customer can make changes");
-		}
-
-		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
-
-		if (existingUser.isPresent()) {
-			Customer customer = existingUser.get();
-
-			List<Address> list = customer.getAddresses();
-
-			if (list.isEmpty() == false)
-				return list;
-			else
 				throw new AddressException("No Address found for this user");
+			}
+		} else {
+			throw new UserException("User Not Found");
+		}
+	}
+
+	@Override
+	public Address updateAddress(Address address, String customerKey)
+			throws LoginException, UserException, AddressException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Customer customer = existingUser.get();
+
+			Address existingaddress = customer.getAddresses();
+
+			if (existingaddress != null) {
+
+				customer.setAddresses(address);
+
+				Address savedaddress = addressRepo.save(address);
+
+				return savedaddress;
+			} else {
+				throw new AddressException("No Address found for this user");
+			}
 
 		} else {
 			throw new UserException("User Not Found");
 		}
 	}
+
+	@Override
+	public Address getAddressByCustomerKey(String customerKey) throws LoginException, UserException, AddressException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+			Customer customer = existingUser.get();
+
+			Address existingaddress = customer.getAddresses();
+
+			if (existingaddress != null) {
+
+				return existingaddress;
+			} else {
+				throw new AddressException("No Address found for this user");
+			}
+
+		} else {
+			throw new UserException("User Not Found");
+		}
+	}
+
+//	@Override
+//	public List<Address> getAllAddressOfCustomer(String customerKey)
+//			throws LoginException, UserException, AddressException {
+//
+//		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+//
+//		if (loggedInUser == null) {
+//			throw new LoginException("Invalid Key Entered");
+//		}
+//
+//		if (loggedInUser.getCustomer() == false) {
+//			throw new UserException("Unauthorized Access! Only Customer can make changes");
+//		}
+//
+//		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+//
+//		if (existingUser.isPresent()) {
+//			Customer customer = existingUser.get();
+//
+//			List<Address> list = customer.getAddresses();
+//
+//			if (list.isEmpty() == false)
+//				return list;
+//			else
+//				throw new AddressException("No Address found for this user");
+//
+//		} else {
+//			throw new UserException("User Not Found");
+//		}
+//	}
 
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.raghavEcomm.exceptions.AddressException;
 import com.raghavEcomm.exceptions.CartException;
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.OrderException;
@@ -198,7 +199,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order placeOrder(String customerKey) throws LoginException, UserException, CartException {
+	public Order placeOrder(String customerKey) throws LoginException, UserException, CartException, AddressException {
+		
 		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
 
 		if (loggedInUser == null) {
@@ -212,6 +214,7 @@ public class OrderServiceImpl implements OrderService {
 		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
 		if (existingUser.isPresent()) {
+			
 			Customer customer = existingUser.get();
 
 			Cart cart = customer.getCart();
@@ -228,7 +231,13 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setOrderDate(LocalDate.now());
 			newOrder.setProducts(productMap);
 			newOrder.setOrderStatus("Placed");
-			newOrder.setShippingAddress(customer.getAddresses().get(0));
+			Address address = customer.getAddresses();
+			
+			if(address==null) {
+				throw new AddressException("No Address found for this User.");
+			}
+			
+			newOrder.setShippingAddress(address);
 			newOrder.setOrderAmount(cart.getCartValue());
 
 			Order savedOrder = orderRepo.save(newOrder);

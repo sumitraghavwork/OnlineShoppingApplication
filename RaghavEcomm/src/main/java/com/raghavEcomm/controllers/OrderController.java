@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.raghavEcomm.exceptions.AddressException;
 import com.raghavEcomm.exceptions.CartException;
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.OrderException;
@@ -33,7 +34,7 @@ public class OrderController {
 
 	@PostMapping("/orders")
 	public ResponseEntity<Order> placeOrderHandler(@RequestParam String customerKey)
-			throws LoginException, UserException, CartException {
+			throws LoginException, UserException, CartException, AddressException {
 
 		Order savedOrder = oservice.placeOrder(customerKey);
 

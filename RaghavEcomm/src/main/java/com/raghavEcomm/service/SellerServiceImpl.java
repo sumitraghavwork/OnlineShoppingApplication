@@ -49,7 +49,19 @@ public class SellerServiceImpl implements SellerService{
 		}
 
 		if (user.getSellerLoginId() == loggedInUser.getUserId()) {
-			return uRepo.save(user);
+			
+			Optional<Seller> existingUser = uRepo.findById(user.getSellerLoginId());
+
+			if (existingUser.isPresent()) {
+				
+				Seller updatedSeller = uRepo.save(user);				
+				
+				return updatedSeller;
+				
+			}else {
+				throw new UserException("User does not exists with this userLoginId " + user.getSellerLoginId());
+			}
+			
 		} else
 			throw new LoginException("Invalid User Details, please login first");
 

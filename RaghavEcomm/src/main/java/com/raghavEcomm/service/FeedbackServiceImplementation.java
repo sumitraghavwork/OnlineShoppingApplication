@@ -15,6 +15,7 @@ import com.raghavEcomm.model.Customer;
 import com.raghavEcomm.model.Feedback;
 import com.raghavEcomm.model.Order;
 import com.raghavEcomm.repository.CurrentUserSessionRepo;
+import com.raghavEcomm.repository.CustomerRepo;
 import com.raghavEcomm.repository.FeedbackRepo;
 import com.raghavEcomm.repository.OrderRepo;
 
@@ -25,10 +26,10 @@ public class FeedbackServiceImplementation implements FeedbackService {
 	private FeedbackRepo fDao;
 
 	@Autowired
-	private CustomerService userService;
+	private CustomerRepo uRepo;
 
 	@Autowired
-	private OrderRepo orderRepo;
+	private CustomerService userService;
 
 	@Autowired
 	private OrderService orderService;
@@ -37,31 +38,47 @@ public class FeedbackServiceImplementation implements FeedbackService {
 	private CurrentUserSessionRepo csdao;
 
 	@Override
-	public Feedback updateFeedBack(Feedback feedback, String key, Integer feedbackId)
+	public Feedback updateFeedBack(Feedback feedback, String customerKey, Integer feedbackId)
 			throws FeedbackException, LoginException, UserException {
 
-		CurrentUserSession loggedInUser = csdao.findByUuid(key);
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
 
 		if (loggedInUser == null) {
 			throw new LoginException("Invalid Key Entered");
 		}
 
-		Customer user = userService.findByUserLoginId(loggedInUser.getUserId());
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
 
-		Optional<Feedback> feedbackOptional = fDao.findById(feedback.getFeedbackId());
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
-		if (feedbackOptional.isPresent()) {
+		if (existingUser.isPresent()) {
 
-			Feedback feedbackUser = feedbackOptional.get();
+			Customer user = existingUser.get();
 
-			if (feedbackUser.getCustomer().getUserLoginId() != user.getUserLoginId())
-				throw new UserException("Invalid User key Entered");
+			Optional<Feedback> feedbackOptional = fDao.findById(feedback.getFeedbackId());
 
-			Feedback updatedFeedback = fDao.save(feedback);
+			if (feedbackOptional.isPresent()) {
 
-			return updatedFeedback;
-		} else
-			throw new FeedbackException("Invalid Feedback details...!");
+				Feedback feedbackUser = feedbackOptional.get();
+
+				if (feedbackUser.getCustomer().getUserLoginId() != user.getUserLoginId())
+					throw new UserException("Invalid User key Entered");
+
+				feedback.setCustomer(feedbackUser.getCustomer());
+				feedback.setOrder(feedbackUser.getOrder());
+
+				Feedback updatedFeedback = fDao.save(feedback);
+
+				return updatedFeedback;
+			} else
+				throw new FeedbackException("Invalid Feedback details...!");
+
+		} else {
+			throw new UserException("User Not Found");
+		}
+
 	}
 
 	@Override
@@ -102,8 +119,10 @@ public class FeedbackServiceImplementation implements FeedbackService {
 				throw new UserException("Invalid User key Entered");
 
 			existingfeedback.setCustomer(null);
+			existingfeedback.setOrder(null);
 
-			fDao.deleteById(feedbackId);
+			fDao.delete(existingfeedback);
+
 			return existingfeedback;
 		} else {
 			throw new FeedbackException("No feedback found with given feedbackId :" + feedbackId);
@@ -113,22 +132,21 @@ public class FeedbackServiceImplementation implements FeedbackService {
 
 	@Override
 	public Feedback addFeedBack(Feedback feedback, String key, Integer orderId)
-			throws FeedbackException, UserException, OrderException {
+			throws FeedbackException, UserException, OrderException, LoginException {
 		CurrentUserSession loggedInUser = csdao.findByUuid(key);
 
 		if (loggedInUser == null) {
 			throw new UserException("user not logged in");
 		}
 
-		Optional<Order> existingOrder = orderRepo.findById(orderId);
+		Order order = orderService.viewOrder(orderId, key);
 
-		if (existingOrder.isPresent() == false)
+		if (order != null)
 			throw new OrderException("No reservations found!");
 
-		Order ord = existingOrder.get();
 		Customer user = userService.findByUserLoginId(loggedInUser.getUserId());
 		feedback.setCustomer(user);
-		feedback.setOrder(ord);
+		feedback.setOrder(order);
 
 		Feedback newFeedback = fDao.save(feedback);
 		return newFeedback;

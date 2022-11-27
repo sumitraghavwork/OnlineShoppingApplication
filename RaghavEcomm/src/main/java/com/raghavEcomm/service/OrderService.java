@@ -3,6 +3,7 @@ package com.raghavEcomm.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.raghavEcomm.exceptions.AddressException;
 import com.raghavEcomm.exceptions.CartException;
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.OrderException;
@@ -21,6 +22,6 @@ public interface OrderService {
 	public Order updateOrderByOrderId(Order order, Integer orderId, String customerKey)
 			throws LoginException, UserException, OrderException;
 
-	public Order placeOrder(String customerKey) throws LoginException, UserException, CartException;
+	public Order placeOrder(String customerKey) throws LoginException, UserException, CartException, AddressException;
 
 }
