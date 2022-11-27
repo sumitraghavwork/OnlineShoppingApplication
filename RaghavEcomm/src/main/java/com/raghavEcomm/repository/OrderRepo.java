@@ -21,7 +21,7 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
 
 	public List<Order> findTop5ByOrderAmount(Integer orderAmount);
 
-	public List<Order> findByOrderAmountBetWeen(Integer s_orderAmount, Integer e_orderAmount);
+	public List<Order> findByOrderAmountBetween(Integer s_orderAmount, Integer e_orderAmount);
 
 	public List<Order> findByOrderAmountGreaterThanEqual(Integer orderAmount);
 
@@ -36,7 +36,5 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
 	public List<Order> findByPayment(Payment payment);
 
 	public List<Order> findByShippingAddress(Address shippingAddress);
-
-	public List<Order> getOrderFromOrderDateToOrderDate(LocalDate orderDate);
 
 }

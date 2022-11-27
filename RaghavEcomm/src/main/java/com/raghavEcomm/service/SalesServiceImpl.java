@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.raghavEcomm.exceptions.AdminException;
 import com.raghavEcomm.exceptions.LoginException;
@@ -13,6 +14,7 @@ import com.raghavEcomm.model.Order;
 import com.raghavEcomm.repository.CurrentUserSessionRepo;
 import com.raghavEcomm.repository.OrderRepo;
 
+@Service
 public class SalesServiceImpl implements SalesService {
 
 	@Autowired
