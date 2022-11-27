@@ -38,7 +38,7 @@ public class ProductCategoryController {
 	 ************************************/
 
 	@GetMapping("/category/{categoryId}")
-	public ResponseEntity<ProductCategory> getCategoryByIdHandler(@PathVariable("categoryID") Integer categoryId,
+	public ResponseEntity<ProductCategory> getCategoryByIdHandler(@PathVariable("categoryId") Integer categoryId,
 			@RequestParam String adminKey) throws ProductCategoryException, LoginException, AdminException {
 
 		ProductCategory savedCategory = pcService.getCategoryById(categoryId, adminKey);
@@ -103,7 +103,7 @@ public class ProductCategoryController {
 	 ************************************/
 
 	@PutMapping("/category/{categoryId}")
-	public ResponseEntity<ProductCategory> updateProductCategoryHandler(@PathVariable("categoryID") Integer categoryId,
+	public ResponseEntity<ProductCategory> updateProductCategoryHandler(@PathVariable("categoryId") Integer categoryId,
 			@RequestParam String adminKey, @Valid @RequestBody ProductCategory category)
 			throws LoginException, AdminException, ProductCategoryException {
 
@@ -122,7 +122,7 @@ public class ProductCategoryController {
 	 ************************************/
 
 	@DeleteMapping("/category/{categoryId}")
-	public ResponseEntity<ProductCategory> deleteProductCategoryHandler(@PathVariable("categoryID") Integer categoryId,
+	public ResponseEntity<ProductCategory> deleteProductCategoryHandler(@PathVariable("categoryId") Integer categoryId,
 			@RequestParam String adminKey) throws ProductCategoryException, LoginException, AdminException {
 
 		ProductCategory savedCategory = pcService.deleteCategory(categoryId, adminKey);

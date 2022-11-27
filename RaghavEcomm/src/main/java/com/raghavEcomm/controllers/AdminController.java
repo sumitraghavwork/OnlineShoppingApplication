@@ -34,7 +34,7 @@ public class AdminController {
 	private AdminService userService;
 
 	@GetMapping("/admins/{username}")
-	public ResponseEntity<Admin> getAdminDetailsHandler(@PathVariable String username) throws AdminException {
+	public ResponseEntity<Admin> getAdminDetailsHandler(@PathVariable("username") String username) throws AdminException {
 
 		Admin existingUser = userService.findByUserName(username);
 

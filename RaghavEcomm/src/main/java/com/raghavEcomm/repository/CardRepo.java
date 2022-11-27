@@ -7,5 +7,6 @@ import com.raghavEcomm.model.Card;
 
 @Repository
 public interface CardRepo extends JpaRepository<Card, Integer>{
-
+	
+	
 }

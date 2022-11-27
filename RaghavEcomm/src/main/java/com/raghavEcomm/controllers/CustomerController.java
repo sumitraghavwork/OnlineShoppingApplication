@@ -30,7 +30,7 @@ public class CustomerController {
 	private CustomerService userService;
 
 	@GetMapping("/customers/{username}")
-	public ResponseEntity<Customer> getCustomerByUsernameHandler(@PathVariable String username) throws UserException {
+	public ResponseEntity<Customer> getCustomerByUsernameHandler(@PathVariable("username") String username) throws UserException {
 
 		Customer existingUser = userService.findByUserName(username);
 

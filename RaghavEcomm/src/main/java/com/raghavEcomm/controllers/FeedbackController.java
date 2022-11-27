@@ -49,7 +49,7 @@ public class FeedbackController {
 	}
 
 	@GetMapping("/feedbacks/{feedbackId}")
-	public ResponseEntity<Feedback> viewFeedBackHandler(@PathVariable Integer feedbackId) throws FeedbackException {
+	public ResponseEntity<Feedback> viewFeedBackHandler(@PathVariable("feedbackId") Integer feedbackId) throws FeedbackException {
 
 		Feedback feedback = feedbackService.viewFeedBack(feedbackId);
 
@@ -67,7 +67,7 @@ public class FeedbackController {
 	}
 
 	@DeleteMapping("/feedbacks/{feedbackId}")
-	public ResponseEntity<Feedback> deleteFeedbackHandler(@RequestParam String key, @PathVariable Integer feedbackId)
+	public ResponseEntity<Feedback> deleteFeedbackHandler(@RequestParam String key, @PathVariable("feedbackId") Integer feedbackId)
 			throws FeedbackException, LoginException, UserException {
 		Feedback deleteFeedback = feedbackService.deleteFeedBack(key, feedbackId);
 
