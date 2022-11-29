@@ -1,5 +1,7 @@
 package com.raghavEcomm.service;
 
+import java.util.List;
+
 import com.raghavEcomm.exceptions.CardException;
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.OrderException;
@@ -21,6 +23,6 @@ public interface PaymentService {
 	public Payment getPaymentDetailsByOrderId(Integer orderId, String customerKey)
 			throws OrderException, LoginException, UserException, PaymentException;
 
-	public Payment getAllPaymentOfCustomerByCustomerId(String customerKey);
+	public List<Payment> getAllPaymentOfCustomerByCustomerId(String customerKey) throws UserException, LoginException, PaymentException;
 
 }

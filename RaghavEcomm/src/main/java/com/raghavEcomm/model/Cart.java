@@ -7,6 +7,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,7 +40,7 @@ public class Cart {
 	@JsonIgnore
 	private Customer customer;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "cart_product", joinColumns = @JoinColumn(name = "cart_id"))
 	@Column(name = "quantity")
 	@MapKeyJoinColumn(name = "product_id", referencedColumnName = "productId")

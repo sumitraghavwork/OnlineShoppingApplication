@@ -26,7 +26,7 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer addressId;
 
-	@Pattern(regexp = "^(true|false)$",message = "{address.default.invalid}")
+//	@Pattern(regexp = "^(true|false)$",message = "{address.default.invalid}")
 	private boolean isDefault;
 
 	@NotBlank(message = "{address.type.invalid}")

@@ -4,11 +4,15 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -50,7 +54,20 @@ public class Seller {
 	@Column(unique = true)
 	private String email;
 
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JsonIgnore
-//	private Map<Product, Integer> products;
+	@ElementCollection
+	@CollectionTable(name = "seller_product", joinColumns = @JoinColumn(name = "seller_id"))
+	@Column(name = "quantity")
+	@MapKeyJoinColumn(name = "product_id", referencedColumnName = "productId")
+	@JsonIgnore
+	private Map<Product, Integer> products;
+
+	public Seller(RegisterUserDto user) {
+		super();
+		this.userName = user.getUserName();
+		this.password = user.getPassword();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.contact = user.getContact();
+		this.email = user.getEmail();
+	}
 }

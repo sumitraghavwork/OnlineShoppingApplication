@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.raghavEcomm.model.Customer;
 import com.raghavEcomm.model.Order;
 import com.raghavEcomm.model.Payment;
 
@@ -27,5 +28,7 @@ public interface PaymentRepo extends JpaRepository<Payment, Integer> {
 	public List<Payment> findByAmountBetween(Integer s_amount, Integer e_amount);
 
 	public List<Payment> findByAmountGreaterThanEqual(Integer amount);
+
+	public List<Payment> findByCustomer(Customer customer);
 
 }

@@ -62,8 +62,18 @@ public class Customer {
 	@JsonIgnore
 	private List<Card> userCards;
 
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "customer")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 	@JsonIgnore
 	private List<Order> orders;
+
+	public Customer(RegisterUserDto user) {
+		super();
+		this.userName = user.getUserName();
+		this.password = user.getPassword();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.contact = user.getContact();
+		this.email = user.getEmail();
+	}
 
 }

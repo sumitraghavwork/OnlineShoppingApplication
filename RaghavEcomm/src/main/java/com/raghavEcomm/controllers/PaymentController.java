@@ -1,5 +1,7 @@
 package com.raghavEcomm.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,8 @@ public class PaymentController {
 	}
 
 	@PutMapping("/payment")
-	public ResponseEntity<String> cancelPaymentHandler(@RequestParam String customerKey,
-			@RequestParam Integer orderId) throws LoginException, UserException, OrderException {
+	public ResponseEntity<String> cancelPaymentHandler(@RequestParam String customerKey, @RequestParam Integer orderId)
+			throws LoginException, UserException, OrderException {
 
 		String res = payService.cancelPayment(orderId, customerKey);
 
@@ -46,7 +48,8 @@ public class PaymentController {
 
 	@GetMapping("/payment/{paymentId}")
 	public ResponseEntity<Payment> getPaymentDetailsByPaymentIdHandler(@RequestParam String customerKey,
-			@PathVariable("paymentId") Integer paymentId) throws LoginException, UserException, OrderException, PaymentException {
+			@PathVariable("paymentId") Integer paymentId)
+			throws LoginException, UserException, OrderException, PaymentException {
 
 		Payment payment = payService.getPaymentDetailsByPaymentId(paymentId, customerKey);
 
@@ -62,12 +65,13 @@ public class PaymentController {
 		return new ResponseEntity<Payment>(payment, HttpStatus.OK);
 	}
 
-//	@GetMapping("/payment")
-//	public ResponseEntity<Payment> getAllPaymentOfCustomerByCustomerIdHandler(@RequestParam String customerKey) {
-//
-//		Payment payment = payService.getAllPaymentOfCustomerByCustomerId(customerKey);
-//
-//		return new ResponseEntity<Payment>(payment, HttpStatus.OK);
-//	}
+	@GetMapping("/payments")
+	public ResponseEntity<List<Payment>> getAllPaymentOfCustomerByCustomerIdHandler(@RequestParam String customerKey)
+			throws UserException, LoginException, PaymentException {
+
+		List<Payment> payment = payService.getAllPaymentOfCustomerByCustomerId(customerKey);
+
+		return new ResponseEntity<List<Payment>>(payment, HttpStatus.OK);
+	}
 
 }

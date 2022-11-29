@@ -1,5 +1,6 @@
 package com.raghavEcomm.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +69,8 @@ public class FeedbackServiceImplementation implements FeedbackService {
 
 				feedback.setCustomer(feedbackUser.getCustomer());
 				feedback.setOrder(feedbackUser.getOrder());
+				feedback.setFeedbackdate(LocalDate.now());
+				feedback.setStatus("Updated");
 
 				Feedback updatedFeedback = fDao.save(feedback);
 
@@ -141,12 +144,14 @@ public class FeedbackServiceImplementation implements FeedbackService {
 
 		Order order = orderService.viewOrder(orderId, key);
 
-		if (order != null)
-			throw new OrderException("No reservations found!");
+		if (order == null)
+			throw new OrderException("No Order found!");
 
 		Customer user = userService.findByUserLoginId(loggedInUser.getUserId());
 		feedback.setCustomer(user);
 		feedback.setOrder(order);
+		feedback.setFeedbackdate(LocalDate.now());
+		feedback.setStatus("New");
 
 		Feedback newFeedback = fDao.save(feedback);
 		return newFeedback;

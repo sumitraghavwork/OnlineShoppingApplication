@@ -2,6 +2,7 @@ package com.raghavEcomm.service;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -71,8 +72,8 @@ public class PaymentServiceImpl implements PaymentService {
 				if (savedOrder.getCustomer().getUserLoginId() == customer.getUserLoginId()) {
 
 					Card userCard = cardservice.getCardById(cardId, customerKey);
-					
-					if(userCard==null)
+
+					if (userCard == null)
 						throw new CardException("No card found with the card id: " + cardId);
 
 					Payment payment = new Payment();
@@ -82,10 +83,13 @@ public class PaymentServiceImpl implements PaymentService {
 					payment.setPaid(true);
 					payment.setPaymentDate(LocalDate.now());
 
+					savedOrder.setPayment(payment);
+					savedOrder.setOrderStatus("Paid");
+
 					Payment savedPayment = payRepo.save(payment);
 
-					savedOrder.setPayment(savedPayment);
-					orderRepo.save(savedOrder);
+//					savedOrder.setPayment(savedPayment);
+//					orderRepo.save(savedOrder);
 
 					return savedPayment;
 
@@ -129,9 +133,22 @@ public class PaymentServiceImpl implements PaymentService {
 				Order savedOrder = existingOrder.get();
 
 				if (savedOrder.getCustomer().getUserLoginId() == customer.getUserLoginId()) {
+					
 
-					savedOrder.setOrderStatus("Cancelled");
-					orderRepo.save(savedOrder);
+					Payment payment = new Payment();
+					payment.setAmount(savedOrder.getOrderAmount());
+					payment.setCard(null);
+					payment.setOrder(savedOrder);
+					payment.setPaid(false);
+					payment.setPaymentDate(LocalDate.now());
+
+					savedOrder.setPayment(payment);
+					savedOrder.setOrderStatus("Unpaid");
+
+					Payment savedPayment = payRepo.save(payment);
+
+//					savedOrder.setOrderStatus("Cancelled");
+//					orderRepo.save(savedOrder);
 
 					return "Order cancelled";
 
@@ -241,9 +258,38 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public Payment getAllPaymentOfCustomerByCustomerId(String customerKey) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Payment> getAllPaymentOfCustomerByCustomerId(String customerKey)
+			throws UserException, LoginException, PaymentException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getCustomer() == false) {
+			throw new UserException("Unauthorized Access! Only Customer can make changes");
+		}
+
+		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Customer customer = existingUser.get();
+
+			List<Payment> payments = payRepo.findByCustomer(customer);
+
+			if (payments != null) {
+
+				return payments;
+
+			} else {
+				throw new PaymentException("No Payments Found For this cusomer id: " + customer.getUserLoginId());
+			}
+
+		} else {
+			throw new UserException("User Not Found");
+		}
 	}
 
 }

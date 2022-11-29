@@ -5,12 +5,13 @@ import java.util.List;
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.UserException;
 import com.raghavEcomm.model.Customer;
+import com.raghavEcomm.model.RegisterUserDto;
 
 public interface CustomerService {
 
-	public Customer saveUser(Customer user) throws UserException;
+	public Customer saveUser(RegisterUserDto user) throws UserException;
 
-	public Customer updateUser(Customer user, String key) throws UserException, LoginException;
+	public Customer updateUser(RegisterUserDto user, String key) throws UserException, LoginException;
 
 	public Customer deleteUser(String username, String customerKey) throws UserException, LoginException;
 

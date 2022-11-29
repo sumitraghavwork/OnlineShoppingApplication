@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raghavEcomm.exceptions.AdminException;
 import com.raghavEcomm.exceptions.LoginException;
+import com.raghavEcomm.exceptions.OrderException;
 import com.raghavEcomm.exceptions.ProductCategoryException;
 import com.raghavEcomm.exceptions.ProductException;
+import com.raghavEcomm.exceptions.UserException;
 import com.raghavEcomm.model.Product;
 import com.raghavEcomm.service.ProductService;
 
@@ -33,12 +35,13 @@ public class ProductController {
 
 	/**********************************
 	 * POST MAPPINGS START
+	 *  
 	 ************************************/
 
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProducthandler(@RequestBody Product product, @RequestParam String key,
 			@RequestParam Integer categoryId)
-			throws ProductException, AdminException, LoginException, ProductCategoryException {
+			throws ProductException, AdminException, LoginException, ProductCategoryException, UserException {
 
 		Product savedproduct = pservice.addProduct(product, key, categoryId);
 
@@ -52,11 +55,12 @@ public class ProductController {
 
 	/**********************************
 	 * PUT MAPPINGS START
+	 *  
 	 ************************************/
 	@PutMapping("/products")
 	public ResponseEntity<Product> updateProductHandler(@Valid @RequestBody Product product,
 			@RequestParam Integer productId, @RequestParam String key)
-			throws ProductException, AdminException, LoginException {
+			throws ProductException, AdminException, LoginException, UserException {
 
 		Product savedproduct = pservice.updateProduct(product, key, productId);
 
@@ -69,10 +73,11 @@ public class ProductController {
 	// ***************************************************************************************************************
 	/**********************************
 	 * DELETE MAPPINGS START
+	 * @throws OrderException 
 	 ************************************/
 	@DeleteMapping("/products/{productId}")
 	public ResponseEntity<Product> deleteProductHandler(@PathVariable("productId") Integer productId,
-			@RequestParam String key) throws ProductException, AdminException, LoginException {
+			@RequestParam String key) throws ProductException, AdminException, LoginException, OrderException {
 
 		Product savedproduct = pservice.deleteProduct(key, productId);
 

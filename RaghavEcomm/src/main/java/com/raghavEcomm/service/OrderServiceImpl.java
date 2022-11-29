@@ -1,9 +1,12 @@
 package com.raghavEcomm.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -200,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Order placeOrder(String customerKey) throws LoginException, UserException, CartException, AddressException {
-		
+
 		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
 
 		if (loggedInUser == null) {
@@ -214,7 +217,7 @@ public class OrderServiceImpl implements OrderService {
 		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
 		if (existingUser.isPresent()) {
-			
+
 			Customer customer = existingUser.get();
 
 			Cart cart = customer.getCart();
@@ -232,23 +235,44 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setProducts(productMap);
 			newOrder.setOrderStatus("Placed");
 			Address address = customer.getAddresses();
-			
-			if(address==null) {
+
+			if (address == null) {
 				throw new AddressException("No Address found for this User.");
 			}
-			
+
 			newOrder.setShippingAddress(address);
 			newOrder.setOrderAmount(cart.getCartValue());
 
+			customer.getOrders().add(newOrder);
+			cart.setProducts(new HashMap<>());
+			cart.setCartValue(0);
+
 			Order savedOrder = orderRepo.save(newOrder);
-			customer.getOrders().add(savedOrder);
-			uRepo.save(customer);
 
 			return savedOrder;
 
 		} else {
 			throw new UserException("User Not Found");
 		}
+	}
+
+	@Override
+	public boolean getProductInOrders(Product product) {
+
+		List<Order> ordersList = orderRepo.findAll();
+
+		if (ordersList == null)
+			return false;
+
+		List<Order> newList = ordersList.stream().filter(o -> o.getProducts().containsKey(product))
+				.collect(Collectors.toList());
+
+		if (newList.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 }

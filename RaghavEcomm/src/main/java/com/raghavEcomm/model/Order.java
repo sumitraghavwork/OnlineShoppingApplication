@@ -52,7 +52,7 @@ public class Order {
 	private LocalDate orderDate;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "order_product")
+	@CollectionTable(name = "order_table_product", joinColumns = @JoinColumn(name = "order_table_id"))
 	@Column(name = "quantity")
 	@MapKeyJoinColumn(name = "product_id", referencedColumnName = "productId")
 	@JsonIgnore

@@ -15,6 +15,7 @@ import com.raghavEcomm.model.CurrentUserSession;
 import com.raghavEcomm.model.Customer;
 import com.raghavEcomm.model.Order;
 import com.raghavEcomm.model.Product;
+import com.raghavEcomm.model.RegisterUserDto;
 import com.raghavEcomm.repository.CartRepo;
 import com.raghavEcomm.repository.CurrentUserSessionRepo;
 import com.raghavEcomm.repository.CustomerRepo;
@@ -32,20 +33,22 @@ public class CustomerServiceImpl implements CustomerService {
 	private CartRepo cartRepo;
 
 	@Override
-	public Customer saveUser(Customer user) throws UserException {
+	public Customer saveUser(RegisterUserDto userdto) throws UserException {
 
-		Customer existingUserName = uRepo.findByUserName(user.getUserName());
-		Customer existingUserEmail = uRepo.findByEmail(user.getEmail());
+		Customer existingUserName = uRepo.findByUserName(userdto.getUserName());
+		Customer existingUserEmail = uRepo.findByEmail(userdto.getEmail());
 
 		if (existingUserName != null)
-			throw new UserException("Username already exists " + user.getUserName());
+			throw new UserException("Username already exists " + userdto.getUserName());
 
 		if (existingUserEmail != null)
-			throw new UserException("User email exists " + user.getEmail());
+			throw new UserException("User email exists " + userdto.getEmail());
 
 		Cart cart = new Cart();
 		cart.setCartValue(0);
 		cart.setProducts(new HashMap<Product, Integer>());
+
+		Customer user = new Customer(userdto);
 
 		user.setCart(cart);
 		cart.setCustomer(user);
@@ -55,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer updateUser(Customer user, String customerKey) throws UserException, LoginException {
+	public Customer updateUser(RegisterUserDto userdto, String customerKey) throws UserException, LoginException {
 
 		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
 
@@ -73,6 +76,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 			Customer customer = existingUser.get();
 
+			Customer user = new Customer(userdto);
+
+			user.setUserLoginId(customer.getUserLoginId());
 			user.setAddresses(customer.getAddresses());
 			user.setCart(customer.getCart());
 			user.setOrders(customer.getOrders());
@@ -89,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer deleteUser(String username,String customerKey) throws UserException, LoginException {
+	public Customer deleteUser(String username, String customerKey) throws UserException, LoginException {
 
 		CurrentUserSession loggedInUser = csdao.findByUuid(customerKey);
 

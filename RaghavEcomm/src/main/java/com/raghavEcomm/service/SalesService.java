@@ -1,5 +1,6 @@
 package com.raghavEcomm.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.raghavEcomm.exceptions.AdminException;
@@ -19,5 +20,13 @@ public interface SalesService {
 			throws LoginException, AdminException, OrderException;
 
 	public List<Order> getSalesOfYearHandler(String adminKey) throws LoginException, AdminException, OrderException;
+
+	public List<Order> getAllOrderFromDate(LocalDate fromDate, String adminKey)
+			throws LoginException, AdminException, OrderException;
+
+	public List<Order> getAllOrderBetweenTwoDates(LocalDate fromDate, LocalDate toDate, String adminKey)
+			throws LoginException, AdminException, OrderException;
+	
+	
 
 }

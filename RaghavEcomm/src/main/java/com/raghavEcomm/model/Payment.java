@@ -33,6 +33,10 @@ public class Payment {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
+	private Customer customer;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Card card;
 
 	@OneToOne(cascade = CascadeType.ALL)

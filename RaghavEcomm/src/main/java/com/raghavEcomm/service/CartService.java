@@ -31,4 +31,5 @@ public interface CartService {
 
 	public Cart emptyCart(String customerkey) throws LoginException, UserException, AdminException, ProductException;
 
+	public List<Cart> getAllCartWithProduct(Product product);
 }

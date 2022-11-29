@@ -135,4 +135,47 @@ public class SalesServiceImpl implements SalesService {
 
 	}
 
+	@Override
+	public List<Order> getAllOrderFromDate(LocalDate fromDate, String adminKey)
+			throws LoginException, AdminException, OrderException {
+		CurrentUserSession loggedInUser = csdao.findByUuid(adminKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getAdmin() == false) {
+			throw new AdminException("Unauthorized Access! Only Admin can make changes");
+		}
+
+		List<Order> orders = orderRepo.findByOrderDateGreaterThanEqual(fromDate);
+
+		if (orders == null)
+			throw new OrderException("No Orders found.");
+
+		return orders;
+	}
+
+	@Override
+	public List<Order> getAllOrderBetweenTwoDates(LocalDate fromDate, LocalDate toDate, String adminKey)
+			throws LoginException, AdminException, OrderException {
+
+		CurrentUserSession loggedInUser = csdao.findByUuid(adminKey);
+
+		if (loggedInUser == null) {
+			throw new LoginException("Invalid Key Entered");
+		}
+
+		if (loggedInUser.getAdmin() == false) {
+			throw new AdminException("Unauthorized Access! Only Admin can make changes");
+		}
+
+		List<Order> orders = orderRepo.findByOrderDateBetween(fromDate, toDate);
+
+		if (orders == null)
+			throw new OrderException("No Orders found.");
+
+		return orders;
+	}
+
 }

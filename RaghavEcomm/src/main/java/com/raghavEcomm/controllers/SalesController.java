@@ -1,5 +1,6 @@
 package com.raghavEcomm.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,27 @@ public class SalesController {
 
 	}
 
+	@GetMapping("/salesFromDateOrders")
+	public ResponseEntity<List<Order>> getAllOrderFromDate(@RequestParam LocalDate fromDate,
+			@RequestParam String adminKey) throws LoginException, AdminException, OrderException {
+
+		List<Order> orders = salesService.getAllOrderFromDate(fromDate, adminKey);
+
+		return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/salesFromDateToDateOrders")
+	public ResponseEntity<List<Order>> getAllOrderBetweenTwoDates(@RequestParam LocalDate fromDate,
+			@RequestParam LocalDate toDate, @RequestParam String adminKey)
+			throws LoginException, AdminException, OrderException {
+
+		List<Order> orders = salesService.getAllOrderBetweenTwoDates(fromDate, toDate, adminKey);
+
+		return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+
+	}
+
 	@GetMapping("/salesOfToday")
 	public ResponseEntity<List<Order>> getSalesOfTodayHandler(@RequestParam String adminKey)
 			throws LoginException, AdminException, OrderException {
@@ -57,7 +79,7 @@ public class SalesController {
 	@GetMapping("/salesOfLastMonth")
 	public ResponseEntity<List<Order>> getSalesOfLastMonthHandler(@RequestParam String adminKey)
 			throws LoginException, AdminException, OrderException {
-		
+
 		List<Order> orders = salesService.getSalesOfLastMonthHandler(adminKey);
 
 		return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
@@ -65,7 +87,8 @@ public class SalesController {
 	}
 
 	@GetMapping("/salesOfThisYear")
-	public ResponseEntity<List<Order>> getSalesOfYearHandler(@RequestParam String adminKey) throws LoginException, AdminException, OrderException {
+	public ResponseEntity<List<Order>> getSalesOfYearHandler(@RequestParam String adminKey)
+			throws LoginException, AdminException, OrderException {
 
 		List<Order> orders = salesService.getSalesOfYearHandler(adminKey);
 

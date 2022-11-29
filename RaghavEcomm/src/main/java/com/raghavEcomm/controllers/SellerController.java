@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.UserException;
+import com.raghavEcomm.model.RegisterUserDto;
 import com.raghavEcomm.model.Seller;
 import com.raghavEcomm.service.SellerService;
 
@@ -48,7 +49,7 @@ public class SellerController {
 	}
 
 	@PostMapping("/sellers")
-	public ResponseEntity<Seller> registerSellerHandler(@Valid @RequestBody Seller user) throws UserException {
+	public ResponseEntity<Seller> registerSellerHandler(@Valid @RequestBody RegisterUserDto user) throws UserException {
 
 		Seller savedUser = userService.saveUser(user);
 
@@ -57,7 +58,7 @@ public class SellerController {
 	}
 
 	@PutMapping("/sellers")
-	public ResponseEntity<Seller> updateSellerHandler(@Valid @RequestBody Seller user, @RequestParam("key") String key)
+	public ResponseEntity<Seller> updateSellerHandler(@Valid @RequestBody RegisterUserDto user, @RequestParam("key") String key)
 			throws UserException, LoginException {
 
 		Seller updatedUser = userService.updateUser(user, key);

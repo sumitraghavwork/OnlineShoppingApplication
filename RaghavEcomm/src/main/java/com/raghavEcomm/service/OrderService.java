@@ -9,6 +9,7 @@ import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.OrderException;
 import com.raghavEcomm.exceptions.UserException;
 import com.raghavEcomm.model.Order;
+import com.raghavEcomm.model.Product;
 
 public interface OrderService {
 
@@ -24,4 +25,5 @@ public interface OrderService {
 
 	public Order placeOrder(String customerKey) throws LoginException, UserException, CartException, AddressException;
 
+	public boolean getProductInOrders(Product product);
 }

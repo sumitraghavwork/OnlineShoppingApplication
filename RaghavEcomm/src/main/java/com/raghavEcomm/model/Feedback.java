@@ -35,23 +35,27 @@ public class Feedback {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer feedbackId;
 
-	@Min(1)
-	@Max(5)
-	private Integer driverRating;
+	@Min(value = 1,message = "{feedback.rating.invalid}")
+	@Max(value = 5,message = "{feedback.rating.invalid}")
+	private Integer productRating;
 	
-	@Min(1)
-	@Max(5)
-	private Integer serviceRating;
+	@Min(value = 1,message = "{feedback.rating.invalid}")
+	@Max(value = 5,message = "{feedback.rating.invalid}")
+	private Integer deliveryRating;
 	
-	@Min(1)
-	@Max(5)
+	@Min(value = 1,message = "{feedback.rating.invalid}")
+	@Max(value = 5,message = "{feedback.rating.invalid}")
 	private Integer overallRating;
 	
 	@NotNull(message = "Comment should not be null")
 	@NotBlank(message = "Comment should not be blank...!")
 	private String comments;
-
+	
+	@JsonIgnore
 	private LocalDate feedbackdate;
+	
+	@JsonIgnore
+	private String status;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore

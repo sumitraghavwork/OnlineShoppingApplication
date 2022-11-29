@@ -10,14 +10,15 @@ import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.UserException;
 import com.raghavEcomm.model.CurrentUserSession;
 import com.raghavEcomm.model.Customer;
+import com.raghavEcomm.model.RegisterUserDto;
 import com.raghavEcomm.model.Seller;
 import com.raghavEcomm.repository.CurrentUserSessionRepo;
 import com.raghavEcomm.repository.CustomerRepo;
 import com.raghavEcomm.repository.SellerRepo;
 
 @Service
-public class SellerServiceImpl implements SellerService{
-	
+public class SellerServiceImpl implements SellerService {
+
 	@Autowired
 	private SellerRepo uRepo;
 
@@ -25,22 +26,24 @@ public class SellerServiceImpl implements SellerService{
 	private CurrentUserSessionRepo csdao;
 
 	@Override
-	public Seller saveUser(Seller user) throws UserException {
+	public Seller saveUser(RegisterUserDto userdto) throws UserException {
 
-		Seller existingUserName = uRepo.findByUserName(user.getUserName());
-		Seller existingUserEmail = uRepo.findByEmail(user.getEmail());
+		Seller existingUserName = uRepo.findByUserName(userdto.getUserName());
+		Seller existingUserEmail = uRepo.findByEmail(userdto.getEmail());
 
 		if (existingUserName != null)
-			throw new UserException("Username already exists " + user.getUserName());
+			throw new UserException("Username already exists " + userdto.getUserName());
 
 		if (existingUserEmail != null)
-			throw new UserException("User email exists " + user.getEmail());
+			throw new UserException("User email exists " + userdto.getEmail());
+
+		Seller user = new Seller(userdto);
 
 		return uRepo.save(user);
 	}
 
 	@Override
-	public Seller updateUser(Seller user, String key) throws UserException, LoginException {
+	public Seller updateUser(RegisterUserDto userdto, String key) throws UserException, LoginException {
 
 		CurrentUserSession loggedInUser = csdao.findByUuid(key);
 
@@ -48,22 +51,28 @@ public class SellerServiceImpl implements SellerService{
 			throw new UserException("Please provide a valid key to update a customer");
 		}
 
-		if (user.getSellerLoginId() == loggedInUser.getUserId()) {
-			
-			Optional<Seller> existingUser = uRepo.findById(user.getSellerLoginId());
+		if (loggedInUser.getSeller() == false) {
+			throw new UserException("Unauthorized Access! Only Seller can make changes");
+		}
 
-			if (existingUser.isPresent()) {
-				
-				Seller updatedSeller = uRepo.save(user);				
-				
-				return updatedSeller;
-				
-			}else {
-				throw new UserException("User does not exists with this userLoginId " + user.getSellerLoginId());
-			}
-			
-		} else
-			throw new LoginException("Invalid User Details, please login first");
+		Optional<Seller> existingUser = uRepo.findById(loggedInUser.getUserId());
+
+		if (existingUser.isPresent()) {
+
+			Seller user = new Seller(userdto);
+
+			Seller oldseller = existingUser.get();
+
+			user.setSellerLoginId(oldseller.getSellerLoginId());
+			user.setProducts(oldseller.getProducts());
+
+			Seller updatedSeller = uRepo.save(user);
+
+			return updatedSeller;
+
+		} else {
+			throw new UserException("Seller does not exists with this id " + loggedInUser.getUserId());
+		}
 
 	}
 

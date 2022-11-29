@@ -19,8 +19,6 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
 
 	public List<Order> findByOrderAmount(Integer orderAmount);
 
-	public List<Order> findTop5ByOrderAmount(Integer orderAmount);
-
 	public List<Order> findByOrderAmountBetween(Integer s_orderAmount, Integer e_orderAmount);
 
 	public List<Order> findByOrderAmountGreaterThanEqual(Integer orderAmount);

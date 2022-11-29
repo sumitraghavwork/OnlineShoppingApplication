@@ -4,13 +4,14 @@ import java.util.List;
 
 import com.raghavEcomm.exceptions.LoginException;
 import com.raghavEcomm.exceptions.UserException;
+import com.raghavEcomm.model.RegisterUserDto;
 import com.raghavEcomm.model.Seller;
 
 public interface SellerService {
 
-	public Seller saveUser(Seller user) throws UserException;
+	public Seller saveUser(RegisterUserDto user) throws UserException;
 
-	public Seller updateUser(Seller user, String key) throws UserException, LoginException;
+	public Seller updateUser(RegisterUserDto user, String key) throws UserException, LoginException;
 
 	public Seller deleteUser(String username) throws UserException;
 

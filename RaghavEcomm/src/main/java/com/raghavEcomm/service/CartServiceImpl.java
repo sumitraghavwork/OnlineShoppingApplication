@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import com.raghavEcomm.model.Product;
 import com.raghavEcomm.repository.CartRepo;
 import com.raghavEcomm.repository.CurrentUserSessionRepo;
 import com.raghavEcomm.repository.CustomerRepo;
+import com.raghavEcomm.repository.ProductRepo;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -32,7 +34,7 @@ public class CartServiceImpl implements CartService {
 	private CustomerRepo uRepo;
 
 	@Autowired
-	private ProductService pserService;
+	private ProductRepo prodRepo;
 
 	@Autowired
 	private CurrentUserSessionRepo csdao;
@@ -51,7 +53,12 @@ public class CartServiceImpl implements CartService {
 			throw new UserException("Unauthorized Access! Only Customer can make changes");
 		}
 
-		Product product = pserService.getProductById(productId);
+		Optional<Product> existingProduct = prodRepo.findById(productId);
+
+		if (existingProduct.isPresent() == false)
+			throw new ProductException("Invalid Product id");
+
+		Product product = existingProduct.get();
 
 		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
@@ -66,6 +73,10 @@ public class CartServiceImpl implements CartService {
 			} else {
 				map.put(product, 1);
 			}
+			//decrease the product own quantity
+//			product.setProductQuantity(product.getProductQuantity() - 1);
+			//build the logic to update the product quantity uniformly
+			
 			cart.setCartValue(cart.getCartValue() + product.getProductPrice());
 
 			Cart savedCart = cartRepo.save(cart);
@@ -91,7 +102,12 @@ public class CartServiceImpl implements CartService {
 			throw new UserException("Unauthorized Access! Only Customer can make changes");
 		}
 
-		Product product = pserService.getProductById(productId);
+		Optional<Product> existingProduct = prodRepo.findById(productId);
+
+		if (existingProduct.isPresent() == false)
+			throw new ProductException("Invalid Product id");
+
+		Product product = existingProduct.get();
 
 		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
@@ -131,7 +147,12 @@ public class CartServiceImpl implements CartService {
 			throw new UserException("Unauthorized Access! Only Customer can make changes");
 		}
 
-		Product product = pserService.getProductById(productId);
+		Optional<Product> existingProduct = prodRepo.findById(productId);
+
+		if (existingProduct.isPresent() == false)
+			throw new ProductException("Invalid Product id");
+
+		Product product = existingProduct.get();
 
 		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
@@ -178,7 +199,12 @@ public class CartServiceImpl implements CartService {
 			throw new UserException("Unauthorized Access! Only Customer can make changes");
 		}
 
-		Product product = pserService.getProductById(productId);
+		Optional<Product> existingProduct = prodRepo.findById(productId);
+
+		if (existingProduct.isPresent() == false)
+			throw new ProductException("Invalid Product id");
+
+		Product product = existingProduct.get();
 
 		Optional<Customer> existingUser = uRepo.findById(loggedInUser.getUserId());
 
@@ -299,5 +325,21 @@ public class CartServiceImpl implements CartService {
 		} else {
 			throw new UserException("User Not Found");
 		}
+	}
+
+	@Override
+	public List<Cart> getAllCartWithProduct(Product product) {
+
+		List<Cart> carts = new ArrayList<>();
+
+		carts = cartRepo.findAll();
+
+		if (carts.isEmpty())
+			return carts;
+
+		carts = carts.stream().filter(c -> c.getProducts().containsKey(product)).collect(Collectors.toList());
+
+		return carts;
+
 	}
 }
