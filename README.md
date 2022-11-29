@@ -29,7 +29,7 @@
 
 ### Deployment
 
-- [Live Project Link](http://busdb-env.eba-3j79v3zc.ap-south-1.elasticbeanstalk.com/swagger-ui/)
+- [Live Project Link](/)
 
 <h1 align="left">Screenshots</h1>
 
