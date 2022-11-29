@@ -21,10 +21,10 @@ public interface SalesService {
 
 	public List<Order> getSalesOfYearHandler(String adminKey) throws LoginException, AdminException, OrderException;
 
-	public List<Order> getAllOrderFromDate(LocalDate fromDate, String adminKey)
+	public List<Order> getAllOrderFromDate(String fromDate, String adminKey)
 			throws LoginException, AdminException, OrderException;
 
-	public List<Order> getAllOrderBetweenTwoDates(LocalDate fromDate, LocalDate toDate, String adminKey)
+	public List<Order> getAllOrderBetweenTwoDates(String fromDate, String toDate, String adminKey)
 			throws LoginException, AdminException, OrderException;
 	
 	

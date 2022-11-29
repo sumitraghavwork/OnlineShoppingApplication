@@ -1,6 +1,7 @@
 package com.raghavEcomm.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class SalesServiceImpl implements SalesService {
 
 		List<Order> orders = orderRepo.findAll();
 
-		if (orders == null)
+		if (orders == null || orders.isEmpty())
 			throw new OrderException("No Orders found.");
 
 		return orders;
@@ -62,7 +63,7 @@ public class SalesServiceImpl implements SalesService {
 
 		List<Order> orders = orderRepo.findByOrderDate(LocalDate.now());
 
-		if (orders == null)
+		if (orders == null || orders.isEmpty())
 			throw new OrderException("No Orders found.");
 
 		return orders;
@@ -84,7 +85,7 @@ public class SalesServiceImpl implements SalesService {
 
 		List<Order> orders = orderRepo.findByOrderDateGreaterThanEqual(LocalDate.now().minusDays(7));
 
-		if (orders == null)
+		if (orders == null || orders.isEmpty())
 			throw new OrderException("No Orders found.");
 
 		return orders;
@@ -128,7 +129,7 @@ public class SalesServiceImpl implements SalesService {
 
 		List<Order> orders = orderRepo.findByOrderDateGreaterThanEqual(LocalDate.now().minusYears(1));
 
-		if (orders == null)
+		if (orders == null || orders.isEmpty())
 			throw new OrderException("No Orders found.");
 
 		return orders;
@@ -136,7 +137,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public List<Order> getAllOrderFromDate(LocalDate fromDate, String adminKey)
+	public List<Order> getAllOrderFromDate(String fdate, String adminKey)
 			throws LoginException, AdminException, OrderException {
 		CurrentUserSession loggedInUser = csdao.findByUuid(adminKey);
 
@@ -147,17 +148,22 @@ public class SalesServiceImpl implements SalesService {
 		if (loggedInUser.getAdmin() == false) {
 			throw new AdminException("Unauthorized Access! Only Admin can make changes");
 		}
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+		LocalDate fromDate = LocalDate.parse(fdate, dtf);
+		
+		
 		List<Order> orders = orderRepo.findByOrderDateGreaterThanEqual(fromDate);
 
-		if (orders == null)
+		if (orders == null || orders.isEmpty())
 			throw new OrderException("No Orders found.");
 
 		return orders;
 	}
 
 	@Override
-	public List<Order> getAllOrderBetweenTwoDates(LocalDate fromDate, LocalDate toDate, String adminKey)
+	public List<Order> getAllOrderBetweenTwoDates(String fdate, String tdate, String adminKey)
 			throws LoginException, AdminException, OrderException {
 
 		CurrentUserSession loggedInUser = csdao.findByUuid(adminKey);
@@ -169,10 +175,16 @@ public class SalesServiceImpl implements SalesService {
 		if (loggedInUser.getAdmin() == false) {
 			throw new AdminException("Unauthorized Access! Only Admin can make changes");
 		}
+
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		LocalDate fromDate = LocalDate.parse(fdate, dtf);
+
+		LocalDate toDate = LocalDate.parse(tdate, dtf);
 
 		List<Order> orders = orderRepo.findByOrderDateBetween(fromDate, toDate);
 
-		if (orders == null)
+		if (orders == null || orders.isEmpty())
 			throw new OrderException("No Orders found.");
 
 		return orders;

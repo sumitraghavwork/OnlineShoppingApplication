@@ -1,13 +1,11 @@
 package com.raghavEcomm.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,18 +34,18 @@ public class SalesController {
 	}
 
 	@GetMapping("/salesFromDateOrders")
-	public ResponseEntity<List<Order>> getAllOrderFromDate(@RequestParam LocalDate fromDate,
-			@RequestParam String adminKey) throws LoginException, AdminException, OrderException {
+	public ResponseEntity<List<Order>> getAllOrderFromDate(@RequestParam String date, @RequestParam String adminKey)
+			throws LoginException, AdminException, OrderException {
 
-		List<Order> orders = salesService.getAllOrderFromDate(fromDate, adminKey);
+		List<Order> orders = salesService.getAllOrderFromDate(date, adminKey);
 
 		return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
 
 	}
 
 	@GetMapping("/salesFromDateToDateOrders")
-	public ResponseEntity<List<Order>> getAllOrderBetweenTwoDates(@RequestParam LocalDate fromDate,
-			@RequestParam LocalDate toDate, @RequestParam String adminKey)
+	public ResponseEntity<List<Order>> getAllOrderBetweenTwoDates(@RequestParam String fromDate,
+			@RequestParam String toDate, @RequestParam String adminKey)
 			throws LoginException, AdminException, OrderException {
 
 		List<Order> orders = salesService.getAllOrderBetweenTwoDates(fromDate, toDate, adminKey);
