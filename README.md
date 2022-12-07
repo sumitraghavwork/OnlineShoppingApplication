@@ -1,5 +1,5 @@
 <h1 align="center">Online Shopping Application</h1>
-<h3 align="center">An REST API based Online Shopping Application. It handles user authentication, products, cart, order, payment, feedback CRUD operations</h3>
+<h3 align="center">A REST API based Online Shopping Application. It handles user authentication, products, cart, order, payment, feedback CRUD operations</h3>
 <br>
 
 ## Modules
